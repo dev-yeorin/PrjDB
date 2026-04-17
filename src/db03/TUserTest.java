@@ -53,8 +53,38 @@ public class TUserTest {
 				System.out.println(aftcnt + " 건 저장되었습니다.");
 				break;  
 			case "4" :  // 회원 수정
+				System.out.println("조회할 아이디를 입력하세요."); 
+				uid = in.nextLine(); 
+				tuser = getTuser( uid ); 
+				if ( tuser == null ) 
+				{ System.out.println("해당 아이디가 없습니다."); 
+				break; } 
+				
+				System.out.println("변경 이름: "); 
+				String newName = in.nextLine(); 
+				
+				System.out.println("변경 이메일: "); 
+				String newEmail = in.nextLine(); 
+				
+				tuser.setUsername(newName); 
+				tuser.setEmail(newEmail); 
+				
+				int cnt = updateTUser(tuser);
+				
+				System.out.println(cnt + " 건 수정되었습니다."); 
 				break;  
 			case "5" :  // 회원 삭제
+				System.out.println("삭제할 아이디를 입력하세요."); 
+				uid = in.nextLine();
+				
+				tuser = getTuser( uid ); 
+				
+				if( tuser == null) { 
+					System.out.println("해당 아이디가 없습니다."); 
+					break; } 
+				
+				int delcnt = deleteTUser(uid); 
+				System.out.println(delcnt + " 건 삭제되었습니다.");
 				break;  
 			case "Q" :  // 종료
 				System.out.println("프로그램을 종료합니다.");
@@ -65,6 +95,28 @@ public class TUserTest {
 
 	}
 	
+
+
+	private static int deleteTUser(String uid) 
+		throws ClassNotFoundException, SQLException {
+
+		    Class.forName(driver);
+		    Connection conn = DriverManager.getConnection(url, dbuid, dbpwd);
+
+		    String sql = "DELETE FROM TUSER WHERE USERID = ?";
+		    PreparedStatement pstmt = conn.prepareStatement(sql);
+		    pstmt.setString(1, uid);
+
+		    int cnt = pstmt.executeUpdate();
+
+		    pstmt.close();
+		    conn.close();
+
+		    return cnt;
+	}
+
+
+
 	//---------------------------------------------------------
 	// 1. 전체 목록 조회 - DB
 		private static ArrayList<TUserDTO> getTUserList() 
@@ -145,6 +197,28 @@ public class TUserTest {
 			return		aftcnt;
 		}
 	
+		// 4. 데이터 수정
+		private static int updateTUser(TUserDTO tuser) 
+				throws ClassNotFoundException, SQLException { 
+			Class.forName(driver); 
+			Connection conn = DriverManager.getConnection(url, dbuid, dbpwd); 
+			String sql = ""; 
+			sql += " UPDATE TUSER "; 
+			sql += " SET USERNAME = ?, USEREMAIL = ? "; 
+			sql += " WHERE USERID = ? "; 
+			
+			PreparedStatement pstmt = conn.prepareStatement(sql); 
+			pstmt.setString(1, tuser.getUserid()); 
+			pstmt.setString(2, tuser.getUsername()); 
+			pstmt.setString(3, tuser.getEmail()); 
+			
+			int aftcnt = pstmt.executeUpdate(); 
+			
+			pstmt.close(); 
+			conn.close(); 
+			
+			return aftcnt;
+		}
 	// -------------------------------------------------------------
 	// 데이터를 키보드로 입력받는다
 	private static TUserDTO inputData() {
