@@ -134,7 +134,7 @@ public class TUserTest {
 				// ... 
 				String userid = rs.getString("userid");
 				String username = rs.getString("username");
-				String email    = rs.getString("useremail");
+				String email    = rs.getString("email");
 				
 				TUserDTO tuser = new TUserDTO(userid, username, email);
 				userList.add( tuser );
@@ -162,7 +162,7 @@ public class TUserTest {
 			if( rs.next()  ) { // 해당 자료가 있다
 				String userid 	= rs.getString("userid");
 				String username = rs.getString("username");
-				String email 	= rs.getString("useremail");
+				String email 	= rs.getString("email");
 				
 				tuser 			= new TUserDTO(userid, username, email);
 				
@@ -204,7 +204,7 @@ public class TUserTest {
 			Connection conn = DriverManager.getConnection(url, dbuid, dbpwd); 
 			String sql = ""; 
 			sql += " UPDATE TUSER "; 
-			sql += " SET USERNAME = ?, USEREMAIL = ? "; 
+			sql += " SET USERNAME = ?, EMAIL = ? "; 
 			sql += " WHERE USERID = ? "; 
 			
 			PreparedStatement pstmt = conn.prepareStatement(sql); 
